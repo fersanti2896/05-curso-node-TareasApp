@@ -41,7 +41,7 @@ const pause = () => {
     });
 }
 
-module.exports = {
+exports = {
     mostrarMenu,
     pause
 }
