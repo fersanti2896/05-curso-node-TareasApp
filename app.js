@@ -1,6 +1,6 @@
 
 import colors from 'colors';
-import { inquiererMenu, leerInput, listadoTareasBorrar, pause }  from './helpers/inquirer.js';
+import { confirmar, inquiererMenu, leerInput, listadoTareasBorrar, pause }  from './helpers/inquirer.js';
 import Tareas from './models/tareas.js';
 import { guardarDB, leerDB } from './helpers/guardarArchivo.js';
 
@@ -40,7 +40,16 @@ const main = async() => {
 
             case '6':
                 const id = await listadoTareasBorrar( tareas.listadoArr );
-                tareas.borrarTarea({ id });
+
+                if( id !== '0') {
+                    const ok = await confirmar('¿Estás seguro de borrar?');
+
+                    if( ok ) {
+                        tareas.borrarTarea(id);
+                        console.log('¡Tarea borrada!');
+                    }
+                }
+                
                 break;
         }
 
