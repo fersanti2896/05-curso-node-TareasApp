@@ -1,11 +1,17 @@
 
 import colors from 'colors';
-import { inquiererMenu, leerInput, pause }  from './helpers/inquirer.js';
+import { inquiererMenu, leerInput, listadoTareasBorrar, pause }  from './helpers/inquirer.js';
 import Tareas from './models/tareas.js';
+import { guardarDB, leerDB } from './helpers/guardarArchivo.js';
 
 const main = async() => {
     let opt = '';
     const tareas = new Tareas();
+    const tareasDb = leerDB();
+
+    if( tareasDb ) {
+        tareas.cargarTareasFromArray( tareasDb );
+    }
 
     do {
         opt = await inquiererMenu(); 
@@ -17,11 +23,28 @@ const main = async() => {
                 break;
             
             case '2':
-                console.log(tareas.listadoArr);
+                tareas.listadoCompleto();
+                break;
+            
+            case '3':
+                tareas.listadoPendientesCompletados();
+                break;
+            
+            case '4':
+                tareas.listadoPendientesCompletados(false);
+                break;
+            
+            case '5':
+                console.log('')
                 break;
 
+            case '6':
+                const id = await listadoTareasBorrar( tareas.listadoArr );
+                tareas.borrarTarea({ id });
+                break;
         }
 
+        guardarDB( tareas.listadoArr );
         await pause();
     } while (opt !== '0');
 }
