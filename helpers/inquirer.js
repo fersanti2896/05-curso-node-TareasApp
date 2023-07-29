@@ -127,10 +127,35 @@ const confirmar = async( message ) => {
     return ok;
 }
 
+const mostrarListadoChecklist = async( tareas = [] ) => {
+    const choices = tareas.map( (tarea, index) => {
+        const idx = `${ index + 1 }.`.green;
+        return {
+            value: tarea.id,
+            name: `${ idx } ${ tarea.desc }`,
+            checked: ( tarea.completadoEn ) ? true : false
+        }    
+    } );
+
+    const pregunta = [
+        {
+            type: 'checkbox',
+            name: 'ids',
+            message: 'Selecciones',
+            choices
+        }
+    ];
+
+    const { ids } = await inquirer.prompt( pregunta );
+
+    return ids;
+}
+
 export {
     confirmar,
     inquiererMenu,
     leerInput,
     listadoTareasBorrar,
+    mostrarListadoChecklist,
     pause
 }
